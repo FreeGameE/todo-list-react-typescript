@@ -1,0 +1,26 @@
+.add-todo {
+  display: flex;
+  justify-content: center;
+}
+
+.add-todo input {
+  position: relative;
+  bottom: 1px;
+  border: none;
+  background-color: transparent;
+  box-shadow: 0px 1px rgb(154, 154, 154);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.add-todo button {
+  padding: 0.4rem 2rem 0.6rem;
+  margin-left: 0.6rem;
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(62, 116, 255);
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 1rem;
+  color: white;
+}

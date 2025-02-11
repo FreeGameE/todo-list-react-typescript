@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img, button {
+  border: none;
+}
+
+html {
+  background-color: rgb(74, 137, 200);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.todo-list-page header {
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem auto;
+}
+
+.main-board {
+  max-width: 26rem;
+  margin: 1rem auto;
+  padding: 1.5rem;
+  background-color: rgb(228, 234, 255);
+  border-radius: 1rem;
+  display: block;
+}

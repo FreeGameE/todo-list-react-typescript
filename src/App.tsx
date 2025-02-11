@@ -1,11 +1,8 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import TodoListPage from "./components/TodoListPage/TodoListPage";
 
 function App() {
-  return (
-    <div>
-    </div>
-  );
+  return <TodoListPage />;
 }
 
 export default App;

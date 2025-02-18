@@ -16,7 +16,7 @@ const AddTodo: React.FC = () => {
           title: "",
         });
         window.dispatchEvent(new Event("todoListUpdated")); //!
-        window.dispatchEvent(new Event("todoCountUpdated"))
+        window.dispatchEvent(new Event("todoCountUpdated"));
       } catch (error) {
         console.error("Ошибка при отправке данных:", error);
       }

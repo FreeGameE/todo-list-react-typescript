@@ -99,7 +99,6 @@ const TodoItem: React.FC<Id> = ({ id }) => {
                     rows={5}
                     maxLength={64}
                     required
-                    onClick={() => setNewTodoTitle({title: newTodoTitle.title?.trim()})}
                     onChange={(event) =>
                       setNewTodoTitle({ title: event?.target.value })
                     }

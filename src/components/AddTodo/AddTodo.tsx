@@ -9,7 +9,10 @@ const AddTodo: React.FC = () => {
   });
 
   const addingTodo = async () => {
-    if (newTodo.title && newTodo.title?.length >= 2) {
+    if (newTodo.title && newTodo.title?.trim().length >= 2) {
+      setNewTodo({
+        title: newTodo.title.trim(),
+      });
       try {
         await updateData(newTodo);
         setNewTodo({

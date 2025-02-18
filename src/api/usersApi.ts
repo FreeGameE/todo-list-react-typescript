@@ -27,8 +27,8 @@ export interface MetaResponse<T, N> {
 export const fetchData = async () => {
   let result;
   try {
-    const responce = await fetch("https://easydev.club/api/v2/todos");
-    result = await responce.json();
+    const response = await fetch("https://easydev.club/api/v2/todos");
+    result = await response.json();
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
   }
@@ -52,7 +52,7 @@ export const updateData = async (updatedData?: TodoRequest) => {
 
 export const changeData = async (id: number, changedData?: TodoRequest) => {
   try {
-    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
+    await fetch(`https://easydev.club/api/v2/todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json; charset=UTF-8" },
       body: JSON.stringify(changedData),
@@ -65,12 +65,12 @@ export const changeData = async (id: number, changedData?: TodoRequest) => {
 
 export const deleteData = async (id: number) => {
   try {
-    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
+    const response = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
       method: "DELETE",
     });
     window.dispatchEvent(new Event("todoCountUpdated"));
     window.dispatchEvent(new Event("todoListUpdated"))
-    if (!responce.ok) {
+    if (!response.ok) {
       alert("Ошибка при удалении данных");
     }
   } catch (error) {

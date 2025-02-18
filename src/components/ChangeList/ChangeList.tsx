@@ -15,8 +15,8 @@ const ChangeList: React.FC<SetFiltredTodoStatus> = ({
   useEffect!(() => {
     const loadTodoList = async () => {
       try {
-        const responce = await fetchData();
-        setTodosInfo(responce.info);
+        const response = await fetchData();
+        setTodosInfo(response.info);
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }

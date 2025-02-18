@@ -25,8 +25,8 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   useEffect!(() => {
     const loadTodoList = async () => {
       try {
-        const responce = await fetchData();
-        const todo = responce.data.find((todo: Todo) => todo.id === id);
+        const response = await fetchData();
+        const todo = response.data.find((todo: Todo) => todo.id === id);
         if (todo) {
           setCurrentTodoData(todo);
           setNewTodoStatus({
@@ -78,12 +78,12 @@ const TodoItem: React.FC<Id> = ({ id }) => {
             height: "1rem",
             marginRight: "0.6rem",
           }}
-          onClick={() => (
-            changingTodoStatus(),
-            window.dispatchEvent(new Event("todoListUpdated")),
-            window.dispatchEvent(new Event("todoListUpdated")),
-            window.dispatchEvent(new Event("todoCountUpdated"))
-          )}
+          onClick={() => {
+            changingTodoStatus();
+            window.dispatchEvent(new Event("todoListUpdated"));
+            window.dispatchEvent(new Event("todoListUpdated"));
+            window.dispatchEvent(new Event("todoCountUpdated"));
+          }}
           onMouseDown={changingTodoStatus}
         />
         {editingStatus ? (
@@ -131,10 +131,9 @@ const TodoItem: React.FC<Id> = ({ id }) => {
               className="accept-button"
               onClick={() =>
                 newTodoTitle!.title!.length >= 2
-                  ? (changingTodoTitle(),
-                    setEditingStatus(false))
-                    // window.dispatchEvent(new Event("todoListUpdated")))
-                  : alert("Текст должен быть от 2 до 64 символов")
+                  ? (changingTodoTitle(), setEditingStatus(false))
+                  : // window.dispatchEvent(new Event("todoListUpdated")))
+                    alert("Текст должен быть от 2 до 64 символов")
               }
             >
               <img src="/accept.png" alt="accept" />
@@ -146,10 +145,10 @@ const TodoItem: React.FC<Id> = ({ id }) => {
             <button
               type="button"
               className="edit-button"
-              onClick={() => (
-                setEditingStatus(true),
-                setNewTodoTitle({ title: currentTodoData.title })
-              )}
+              onClick={() => {
+                setEditingStatus(true);
+                setNewTodoTitle({ title: currentTodoData.title });
+              }}
             >
               <img src="/edit.png" alt="edit" />
             </button>

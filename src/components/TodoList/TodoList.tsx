@@ -16,8 +16,8 @@ const TodoList: React.FC<FilteredTodoStatus> = ({ filteredTodoStatus }) => {
   useEffect!(() => {
     const loadTodoList = async () => {
       try {
-        const responce = await fetchData();
-        setTodosData(responce.data);
+        const response = await fetchData();
+        setTodosData(response.data);
         setFilteredTodosData(todosData.filter((data) => data.isDone === false));
         setLoading(false);
       } catch (error) {
@@ -69,7 +69,7 @@ const TodoList: React.FC<FilteredTodoStatus> = ({ filteredTodoStatus }) => {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect!(() => {
     if (count === filteredTodosData.length && count > 0) {
       setVisibility(true);
     } else {setVisibility(false);}

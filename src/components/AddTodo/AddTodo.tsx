@@ -11,7 +11,7 @@ const AddTodo: React.FC = () => {
   const addingTodo = async () => {
     if (newTodo.title && newTodo.title?.length >= 2) {
       try {
-        const responce = await updateData(newTodo);
+        await updateData(newTodo);
         setNewTodo({
           title: "",
         });

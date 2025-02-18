@@ -3,12 +3,12 @@ import { fetchData, TodoInfo } from "../../api/usersApi";
 import "./ChangeList.css";
 
 type SetFiltredTodoStatus = {
-  setFiltredTodoStatus: (value: string) => void;
-  filtredTodoStatus: string;
+  setFilteredTodoStatus: (value: string) => void;
+  filteredTodoStatus: string;
 };
 
 const ChangeList: React.FC<SetFiltredTodoStatus> = ({
-  setFiltredTodoStatus, filtredTodoStatus
+  setFilteredTodoStatus, filteredTodoStatus
 }) => {
   const [todosInfo, setTodosInfo] = useState<TodoInfo>();
 
@@ -22,25 +22,29 @@ const ChangeList: React.FC<SetFiltredTodoStatus> = ({
       }
     };
     loadTodoList();
-  }, []);
+    window.addEventListener("todoCountUpdated", loadTodoList); //!
+    return () => {
+      window.removeEventListener("todoCountUpdated", loadTodoList);
+    };
+  }, [filteredTodoStatus]);
 
   return (
     <div className="todo-status">
       <button
-        onClick={() => setFiltredTodoStatus("all")}
-        className={filtredTodoStatus === "all" ? "active" : undefined}
+        onClick={() => (setFilteredTodoStatus("all"))}
+        className={filteredTodoStatus === "all" ? "active" : undefined}
       >
         Все({todosInfo?.all})
       </button>
       <button
-        onClick={() => setFiltredTodoStatus("inWork")}
-        className={filtredTodoStatus === "inWork" ? "active" : undefined}
+        onClick={() => setFilteredTodoStatus("inWork")}
+        className={filteredTodoStatus === "inWork" ? "active" : undefined}
       >
         В работе({todosInfo?.inWork})
       </button>
       <button
-        onClick={() => setFiltredTodoStatus("completed")}
-        className={filtredTodoStatus === "completed" ? "active" : undefined}
+        onClick={() => setFilteredTodoStatus("completed")}
+        className={filteredTodoStatus === "completed" ? "active" : undefined}
       >
         Завершённые({todosInfo?.completed})
       </button>

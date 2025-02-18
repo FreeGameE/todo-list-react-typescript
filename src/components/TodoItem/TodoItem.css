@@ -49,6 +49,7 @@ button img {
 }
 
 .cancel-button {
+  /* margin-left: 0.6rem; */
   margin-right: 0.6rem;
   border: none;
   border-radius: 3px;
@@ -56,6 +57,7 @@ button img {
 }
 
 .edit-button {
+  margin-left: 0.6rem;
   margin-right: 0.6rem;
   border: none;
   border-radius: 3px;

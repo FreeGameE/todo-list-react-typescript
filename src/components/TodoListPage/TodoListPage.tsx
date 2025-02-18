@@ -5,7 +5,7 @@ import TodoList from "../TodoList/TodoList";
 import "./TodoListPage.css";
 
 const TodoListPage: React.FC = () => {
-  const [filtredTodoStatus, setFiltredTodoStatus] = useState("all");
+  const [filteredTodoStatus, setFilteredTodoStatus] = useState("all");
 
   
 
@@ -14,8 +14,8 @@ const TodoListPage: React.FC = () => {
       <header>СПИСОК ЗАДАЧ</header>
       <section className="main-board">
         <AddTodo />
-        <ChangeList setFiltredTodoStatus={setFiltredTodoStatus} filtredTodoStatus={filtredTodoStatus} />
-        <TodoList filtredTodoStatus={filtredTodoStatus} />
+        <ChangeList setFilteredTodoStatus={setFilteredTodoStatus} filteredTodoStatus={filteredTodoStatus} />
+        <TodoList filteredTodoStatus={filteredTodoStatus} />
       </section>
     </div>
   );

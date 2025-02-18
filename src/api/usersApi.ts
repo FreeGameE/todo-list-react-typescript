@@ -34,3 +34,46 @@ export const fetchData = async () => {
   }
   return await result;
 };
+
+export const updateData = async (updatedData?: TodoRequest) => {
+  try {
+    await fetch("https://easydev.club/api/v2/todos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(updatedData),
+    });
+
+    // window.dispatchEvent(new Event("changeListUpdated")); //!
+  } catch (error) {
+    console.error("Ошибка при отправке данных:", error);
+  }
+  fetchData();
+};
+
+export const changeData = async (id: number, changedData?: TodoRequest) => {
+  try {
+    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(changedData),
+    });
+  } catch (error) {
+    console.error("Ошибка при отправке данных:", error);
+  }
+  fetchData();
+};
+
+export const deleteData = async (id: number) => {
+  try {
+    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
+      method: "DELETE",
+    });
+    window.dispatchEvent(new Event("todoCountUpdated"));
+    window.dispatchEvent(new Event("todoListUpdated"))
+    if (!responce.ok) {
+      alert("Ошибка при удалении данных");
+    }
+  } catch (error) {
+    console.error("Ошибка при удалении данных:", error);
+  }
+};

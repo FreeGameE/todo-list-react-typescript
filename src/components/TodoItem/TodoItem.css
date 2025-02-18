@@ -1,0 +1,83 @@
+.todo-item {
+  padding: 0rem 1rem;
+  margin: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 0.5rem;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  max-width: 16rem;
+}
+
+.left-side p {
+  word-break: break-all;
+  border: 1px solid rgb(255, 255, 255);
+  margin: 16px 0px;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+}
+
+textarea {
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 5px;
+  resize: none;
+  width: 12rem;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 16px 0px;
+  padding: 0;
+}
+
+.todo-item button {
+  padding: 0px;
+  width: 2rem;
+  height: 2rem;
+}
+
+button img {
+  margin: 0.3rem;
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.cancel-button {
+  /* margin-left: 0.6rem; */
+  margin-right: 0.6rem;
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(245, 103, 20);
+}
+
+.edit-button {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(62, 116, 255);
+}
+
+.delete-button {
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(255, 62, 62);
+}
+
+.accept-button {
+  margin-right: 0.6rem;
+  border: none;
+  border-radius: 3px;
+  background-color: rgb(17, 142, 27);
+}
+
+.unactive {
+  opacity: 0.7;
+  pointer-events: none
+}

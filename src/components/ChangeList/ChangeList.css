@@ -1,0 +1,21 @@
+.todo-status {
+  margin: 0.6rem auto;
+  margin-top: 1.5rem;
+  width: 22rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo-status button {
+  background-color: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: grey;
+}
+
+.todo-status button.active {
+  color: dodgerblue;
+  text-decoration: underline;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchData, TodoInfo } from "../../api/usersApi";
 import "./ChangeList.css";
+import { Button } from 'antd';
 
 type SetFiltredTodoStatus = {
   setFilteredTodoStatus: (value: string) => void;
@@ -29,25 +30,25 @@ const ChangeList: React.FC<SetFiltredTodoStatus> = ({
   }, [filteredTodoStatus]);
 
   return (
-    <div className="todo-status">
-      <button
+    <div className="todo-status" style={{ marginTop: "0"}}>
+      <Button
         onClick={() => (setFilteredTodoStatus("all"))}
         className={filteredTodoStatus === "all" ? "active" : undefined}
       >
         Все({todosInfo?.all})
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => setFilteredTodoStatus("inWork")}
         className={filteredTodoStatus === "inWork" ? "active" : undefined}
       >
         В работе({todosInfo?.inWork})
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => setFilteredTodoStatus("completed")}
         className={filteredTodoStatus === "completed" ? "active" : undefined}
       >
         Завершённые({todosInfo?.completed})
-      </button>
+      </Button>
     </div>
   );
 };

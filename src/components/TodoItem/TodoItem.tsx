@@ -7,6 +7,13 @@ import {
   deleteData,
 } from "../../api/usersApi";
 import "./TodoItem.css";
+import { Button, Form } from "antd";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
 
 type Id = {
   id: number;
@@ -43,10 +50,9 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   }, []);
 
   const changingTodoTitle = async () => {
-    
     try {
-      setEditingStatus(false)
-      setNewTodoTitle({title: newTodoTitle.title?.trim()})
+      setEditingStatus(false);
+      setNewTodoTitle({ title: newTodoTitle.title?.trim() });
       await changeData(currentTodoData!.id, newTodoTitle);
       window.dispatchEvent(new Event("todoListUpdated"));
       window.dispatchEvent(new Event("todoCountUpdated"));
@@ -65,7 +71,6 @@ const TodoItem: React.FC<Id> = ({ id }) => {
       console.error("Ошибка при отправке данных:", error);
     }
   };
-
 
   return (
     <>
@@ -94,17 +99,39 @@ const TodoItem: React.FC<Id> = ({ id }) => {
             />
             {editingStatus ? (
               <>
-                <form id={`change${id}`}>
-                  <textarea
-                    rows={5}
-                    maxLength={64}
-                    required
-                    onChange={(event) =>
-                      setNewTodoTitle({ title: event?.target.value })
-                    }
-                    value={newTodoTitle?.title}
-                  />
-                </form>
+                <Form id={`change${id}`}>
+                  <Form.Item
+                    initialValue={newTodoTitle?.title}
+                    name="title"
+                    rules={[
+                      { required: true, message: "Введите текст задачи" },
+                      {
+                        min: 2,
+                        message:
+                          "Текст задачи должен содержать минимум 2 символа",
+                      },
+                      {
+                        max: 64,
+                        message:
+                          "Текст задачи должен содержать максимум 64 символа",
+                      },
+                    ]}
+                    style={{ marginBottom: "0", width: "12rem" }}
+                  >
+                    <textarea
+                      rows={5}
+                      // maxLength={64}
+                      required
+                      onChange={(event) =>
+                        setNewTodoTitle({ title: event?.target.value })
+                      }
+                      value={newTodoTitle?.title}
+                      style={{
+                        resize: "none", margin: "16px 0px"
+                      }}
+                    />
+                  </Form.Item>
+                </Form>
               </>
             ) : (
               <p
@@ -123,53 +150,56 @@ const TodoItem: React.FC<Id> = ({ id }) => {
             {editingStatus ? (
               <>
                 {/* //* кнопка отменить изменения */}
-                <button
-                  type="button"
-                  className="cancel-button"
+                <Button
+                  className="cancel-Button"
                   onClick={() => setEditingStatus(false)}
                 >
-                  <img src="/cancel.png" alt="cancel" />
-                </button>
+                  {/* <img src="/cancel.png" alt="cancel" /> */}
+                  <CloseOutlined />
+                </Button>
                 {/* кнопка принять изменения */}
-                <button
-                  type="button"
+                <Button
                   form={`change${id}`}
-                  className="accept-button"
-                  onClick={() =>  
+                  className="accept-Button"
+                  style={{ marginLeft: "0.3rem" }}
+                  onClick={() =>
                     newTodoTitle!.title!.trim().length >= 2
                       ? (changingTodoTitle(), setEditingStatus(false))
                       : // window.dispatchEvent(new Event("todoListUpdated")))
                         alert("Текст должен быть от 2 до 64 символов")
                   }
                 >
-                  <img src="/accept.png" alt="accept" />
-                </button>
+                  {/* <img src="/accept.png" alt="accept" /> */}
+                  <CheckOutlined />
+                </Button>
               </>
             ) : (
               <>
                 {/* //$ кнопка редактировать */}
-                <button
-                  type="button"
-                  className="edit-button"
+
+                <Button
+                  className="edit-Button"
                   onClick={() => {
                     setEditingStatus(true);
                     setNewTodoTitle({ title: currentTodoData.title.trim() });
                   }}
                 >
-                  <img src="/edit.png" alt="edit" />
-                </button>
+                  {/* <img src="/edit.png" alt="edit" /> */}
+                  <FormOutlined />
+                </Button>
               </>
             )}
             {/* //@ кнопка удалить todo */}
-            <button
-              type="button"
+            <Button
+              style={{ marginLeft: "0.3rem" }}
               onClick={() => deleteData(id)}
               className={
-                !editingStatus ? "delete-button" : "delete-button unactive"
+                !editingStatus ? "delete-Button" : "delete-Button unactive"
               }
             >
-              <img src="/delete.png" alt="delete" />
-            </button>
+              {/* <img src="/delete.png" alt="delete" /> */}
+              <DeleteOutlined />
+            </Button>
           </section>
         </div>
       )}

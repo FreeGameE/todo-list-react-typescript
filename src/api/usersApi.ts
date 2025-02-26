@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface TodoRequest {
   title?: string;
   isDone?: boolean; // изменение статуса задачи происходит через этот флаг
@@ -24,11 +26,11 @@ export interface MetaResponse<T, N> {
   };
 }
 
-export const fetchData = async () => {
+export const getData = async () => {
   let result;
   try {
-    const response = await fetch("https://easydev.club/api/v2/todos");
-    result = await response.json();
+    const response = await axios.get("https://easydev.club/api/v2/todos");
+    result = response.data;
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
   }
@@ -37,40 +39,35 @@ export const fetchData = async () => {
 
 export const updateData = async (updatedData?: TodoRequest) => {
   try {
-    await fetch("https://easydev.club/api/v2/todos", {
-      method: "POST",
+    await axios.post("https://easydev.club/api/v2/todos", updatedData, {
       headers: { "Content-Type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(updatedData),
     });
 
     // window.dispatchEvent(new Event("changeListUpdated")); //!
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  fetchData();
+  getData();
 };
 
 export const changeData = async (id: number, changedData?: TodoRequest) => {
   try {
-    await fetch(`https://easydev.club/api/v2/todos/${id}`, {
-      method: "PUT",
+    await axios.put(`https://easydev.club/api/v2/todos/${id}`, changedData, {
       headers: { "Content-Type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(changedData),
     });
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  fetchData();
+  getData();
 };
 
 export const deleteData = async (id: number) => {
   try {
-    const response = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
-      method: "DELETE",
+    const response = await axios.delete(`https://easydev.club/api/v2/todos/${id}`, {
     });
     window.dispatchEvent(new Event("todoCountUpdated"));
-    window.dispatchEvent(new Event("todoListUpdated"))
-    if (!response.ok) {
+    window.dispatchEvent(new Event("todoListUpdated"));
+    if (response.status !== 200) {
       alert("Ошибка при удалении данных");
     }
   } catch (error) {

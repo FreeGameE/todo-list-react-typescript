@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchData, TodoInfo } from "../../api/usersApi";
+import { getData, TodoInfo } from "../../api/usersApi";
+import { Button } from "antd";
 import "./ChangeList.css";
-import { Button } from 'antd';
 
 type SetFiltredTodoStatus = {
   setFilteredTodoStatus: (value: string) => void;
@@ -9,42 +9,58 @@ type SetFiltredTodoStatus = {
 };
 
 const ChangeList: React.FC<SetFiltredTodoStatus> = ({
-  setFilteredTodoStatus, filteredTodoStatus
+  setFilteredTodoStatus,
+  filteredTodoStatus,
 }) => {
   const [todosInfo, setTodosInfo] = useState<TodoInfo>();
 
-  useEffect!(() => {
+  const loadFilterFromStorage = () => {
+    const savedFilter = localStorage.getItem("todoFilter");
+    return savedFilter ? savedFilter : "all";
+  };
+
+  useEffect(() => {
     const loadTodoList = async () => {
       try {
-        const response = await fetchData();
+        const response = await getData();
         setTodosInfo(response.info);
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }
     };
     loadTodoList();
-    window.addEventListener("todoCountUpdated", loadTodoList); //!
+    window.addEventListener("todoCountUpdated", loadTodoList);
     return () => {
       window.removeEventListener("todoCountUpdated", loadTodoList);
     };
   }, [filteredTodoStatus]);
 
+  useEffect!(() => {
+    const savedFilter = loadFilterFromStorage();
+    setFilteredTodoStatus(savedFilter);
+  }, []);
+
+  const handleFilterChange = (filter: string) => {
+    setFilteredTodoStatus(filter);
+    localStorage.setItem("todoFilter", filter);
+  };
+
   return (
-    <div className="todo-status" style={{ marginTop: "0"}}>
+    <div className="todo-status" style={{ marginTop: "0" }}>
       <Button
-        onClick={() => (setFilteredTodoStatus("all"))}
+        onClick={() => handleFilterChange("all")}
         className={filteredTodoStatus === "all" ? "active" : undefined}
       >
         Все({todosInfo?.all})
       </Button>
       <Button
-        onClick={() => setFilteredTodoStatus("inWork")}
+        onClick={() => handleFilterChange("inWork")}
         className={filteredTodoStatus === "inWork" ? "active" : undefined}
       >
         В работе({todosInfo?.inWork})
       </Button>
       <Button
-        onClick={() => setFilteredTodoStatus("completed")}
+        onClick={() => handleFilterChange("completed")}
         className={filteredTodoStatus === "completed" ? "active" : undefined}
       >
         Завершённые({todosInfo?.completed})

@@ -16,6 +16,7 @@ const TodoListPage: React.FC = () => {
         <AddTodo />
         <ChangeList setFilteredTodoStatus={setFilteredTodoStatus} filteredTodoStatus={filteredTodoStatus} />
         <TodoList filteredTodoStatus={filteredTodoStatus} />
+        
       </section>
     </div>
   );

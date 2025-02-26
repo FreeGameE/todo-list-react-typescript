@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  fetchData,
+  getData,
   Todo,
   changeData,
   TodoRequest,
@@ -32,10 +32,10 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   useEffect!(() => {
     const loadTodoList = async () => {
       try {
-        const response = await fetchData();
+        const response = await getData();
         const todo = response.data.find((todo: Todo) => todo.id === id);
         if (todo) {
-          setCurrentTodoData(todo);
+          setCurrentTodoData((prev) => prev || todo);
           setNewTodoStatus({
             isDone: todo.isDone,
           });
@@ -74,8 +74,8 @@ const TodoItem: React.FC<Id> = ({ id }) => {
 
   return (
     <>
-      {!currentTodoData || !newTodoStatus ? (
-        <div></div>
+      {false ? (
+        <div>1234567890</div>
       ) : (
         <div className="todo-item">
           <section className="left-side">
@@ -110,24 +110,20 @@ const TodoItem: React.FC<Id> = ({ id }) => {
                         message:
                           "Текст задачи должен содержать минимум 2 символа",
                       },
-                      {
-                        max: 64,
-                        message:
-                          "Текст задачи должен содержать максимум 64 символа",
-                      },
                     ]}
                     style={{ marginBottom: "0", width: "12rem" }}
                   >
                     <textarea
                       rows={5}
-                      // maxLength={64}
+                      maxLength={64}
                       required
                       onChange={(event) =>
                         setNewTodoTitle({ title: event?.target.value })
                       }
                       value={newTodoTitle?.title}
                       style={{
-                        resize: "none", margin: "16px 0px"
+                        resize: "none",
+                        margin: "16px 0px",
                       }}
                     />
                   </Form.Item>
@@ -181,7 +177,7 @@ const TodoItem: React.FC<Id> = ({ id }) => {
                   className="edit-Button"
                   onClick={() => {
                     setEditingStatus(true);
-                    setNewTodoTitle({ title: currentTodoData.title.trim() });
+                    setNewTodoTitle({ title: currentTodoData!.title.trim() });
                   }}
                 >
                   {/* <img src="/edit.png" alt="edit" /> */}

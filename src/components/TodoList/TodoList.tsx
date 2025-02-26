@@ -1,5 +1,5 @@
 import TodoItem from "../TodoItem/TodoItem";
-import { fetchData, Todo } from "../../api/usersApi";
+import { getData, Todo } from "../../api/usersApi";
 import { useEffect, useState } from "react";
 
 type FilteredTodoStatus = {
@@ -14,16 +14,26 @@ const TodoList: React.FC<FilteredTodoStatus> = ({ filteredTodoStatus }) => {
   const [count, setCount] = useState<number>(0);
 
   useEffect!(() => {
+    setLoading(true);
     const loadTodoList = async () => {
       try {
-        const response = await fetchData();
-        setTodosData(response.data);
-        setFilteredTodosData(todosData.filter((data) => data.isDone === false));
-        setLoading(false);
+        const response = await getData();
+        const newData: Todo[] = response.data;
+    
+        setTodosData((prevTodos) => {
+          const updatedTodos = newData.map((newTodo: Todo) => {
+            const existingTodo = prevTodos.find((todo) => todo.id === newTodo.id);
+            return existingTodo ? { ...existingTodo, ...newTodo } : newTodo;
+          });
+          return updatedTodos;
+        });
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
+      } finally {
+        setLoading(false);
       }
     };
+    
     loadTodoList();
 
     window.addEventListener("todoListUpdated", loadTodoList); //!
@@ -72,8 +82,19 @@ const TodoList: React.FC<FilteredTodoStatus> = ({ filteredTodoStatus }) => {
   useEffect!(() => {
     if (count === filteredTodosData.length && count > 0) {
       setVisibility(true);
-    } else {setVisibility(false);}
+    } else {
+      setVisibility(false);
+    }
   }, [count]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((prev) => prev + 1);
+      window.dispatchEvent(new Event("todoListUpdated"));
+      window.dispatchEvent(new Event("todoCountUpdated"));
+    }, 5000);
+    return () => clearInterval(interval); // сбросить счётчик
+  }, []);
 
   return (
     <div>
@@ -86,7 +107,7 @@ const TodoList: React.FC<FilteredTodoStatus> = ({ filteredTodoStatus }) => {
           return (
             <div
               key={`div${data.id}`}
-              style={visibility ? { display: "block" } : { display: "none" }}
+              style={visibility ? { display: "block" } : { display: "block" }}
             >
               <TodoItem key={data.id} id={data.id} />
             </div>

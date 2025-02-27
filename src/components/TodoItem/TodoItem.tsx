@@ -30,12 +30,12 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   const [editingStatus, setEditingStatus] = useState<boolean>(false);
 
   useEffect!(() => {
-    const loadTodoList = async () => {
+    const loadTodoItem = async () => {
       try {
         const response = await getData();
         const todo = response.data.find((todo: Todo) => todo.id === id);
         if (todo) {
-          setCurrentTodoData((prev) => prev || todo);
+          setCurrentTodoData(todo);
           setNewTodoStatus({
             isDone: todo.isDone,
           });
@@ -46,7 +46,12 @@ const TodoItem: React.FC<Id> = ({ id }) => {
         window.dispatchEvent(new Event("visibilityChange"));
       }
     };
-    loadTodoList();
+    loadTodoItem();
+
+    window.addEventListener("todoItemUpdated", loadTodoItem); //!
+    return () => {
+      window.removeEventListener("todoItemUpdated", loadTodoItem);
+    };
   }, []);
 
   const changingTodoTitle = async () => {
@@ -56,6 +61,7 @@ const TodoItem: React.FC<Id> = ({ id }) => {
       await changeData(currentTodoData!.id, newTodoTitle);
       window.dispatchEvent(new Event("todoListUpdated"));
       window.dispatchEvent(new Event("todoCountUpdated"));
+      window.dispatchEvent(new Event("todoItemUpdated"));
     } catch (error) {
       console.error("Ошибка при отправке данных:", error);
     }
@@ -67,6 +73,10 @@ const TodoItem: React.FC<Id> = ({ id }) => {
     });
     try {
       await changeData(currentTodoData!.id, newTodoStatus);
+      
+      window.dispatchEvent(new Event("todoListUpdated"));
+      window.dispatchEvent(new Event("todoCountUpdated"));
+      window.dispatchEvent(new Event("todoItemUpdated"));
     } catch (error) {
       console.error("Ошибка при отправке данных:", error);
     }
@@ -75,7 +85,7 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   return (
     <>
       {false ? (
-        <div>1234567890</div>
+        <div></div>
       ) : (
         <div className="todo-item">
           <section className="left-side">
@@ -92,7 +102,7 @@ const TodoItem: React.FC<Id> = ({ id }) => {
               onClick={() => {
                 changingTodoStatus();
                 window.dispatchEvent(new Event("todoListUpdated"));
-                window.dispatchEvent(new Event("todoListUpdated"));
+                // window.dispatchEvent(new Event("todoListUpdated"));
                 window.dispatchEvent(new Event("todoCountUpdated"));
               }}
               onMouseDown={changingTodoStatus}

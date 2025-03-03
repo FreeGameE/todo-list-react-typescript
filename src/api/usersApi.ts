@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface TodoRequest {
   title?: string;
   isDone?: boolean; // изменение статуса задачи происходит через этот флаг
@@ -24,53 +26,60 @@ export interface MetaResponse<T, N> {
   };
 }
 
-export const fetchData = async () => {
-  let result;
+const api = axios.create({
+  baseURL: "https://easydev.club/api/v2",
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json; charset=UTF-8",
+  },
+});
+
+export const getData = async (status: "all" | "completed" | "inWork") => {
   try {
-    const responce = await fetch("https://easydev.club/api/v2/todos");
-    result = await responce.json();
+    const response = await api.get("/todos", {
+      params: { filter: status },
+    });
+    return response.data;
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
   }
-  return await result;
+};
+
+export const getTodoById = async (id: number) => {
+  try {
+    const response = await api.get(`/todos/${id}`);
+    return response.data;
+  } catch (error) {
+    // console.error("Ошибка при получении todo:", error);
+  }
 };
 
 export const updateData = async (updatedData?: TodoRequest) => {
   try {
-    await fetch("https://easydev.club/api/v2/todos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(updatedData),
-    });
+    await api.post("todos", updatedData);
 
     // window.dispatchEvent(new Event("changeListUpdated")); //!
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  fetchData();
+  getData("all");
 };
 
 export const changeData = async (id: number, changedData?: TodoRequest) => {
   try {
-    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(changedData),
-    });
+    await api.put(`/todos/${id}`, changedData);
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  fetchData();
+  getData("all");
 };
 
 export const deleteData = async (id: number) => {
   try {
-    const responce = await fetch(`https://easydev.club/api/v2/todos/${id}`, {
-      method: "DELETE",
-    });
+    const response = await api.delete(`/todos/${id}`);
     window.dispatchEvent(new Event("todoCountUpdated"));
-    window.dispatchEvent(new Event("todoListUpdated"))
-    if (!responce.ok) {
+    window.dispatchEvent(new Event("todoListUpdated"));
+    if (response.status !== 200) {
       alert("Ошибка при удалении данных");
     }
   } catch (error) {

@@ -62,7 +62,7 @@ export const updateData = async (updatedData?: TodoRequest) => {
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  getData("inWork");
+  getData("all");
 };
 
 export const changeData = async (id: number, changedData?: TodoRequest) => {
@@ -71,7 +71,7 @@ export const changeData = async (id: number, changedData?: TodoRequest) => {
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  getData("inWork");
+  getData("all");
 };
 
 export const deleteData = async (id: number) => {

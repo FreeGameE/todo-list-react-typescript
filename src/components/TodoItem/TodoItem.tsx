@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  getData,
   Todo,
   changeData,
   TodoRequest,
   deleteData,
+  getTodoById,
 } from "../../api/usersApi";
 import "./TodoItem.css";
 import { Button, Form } from "antd";
@@ -19,47 +19,44 @@ type Id = {
   id: number;
 };
 
-const TodoItem: React.FC<Id> = ({ id }) => {
+const TodoItem: React.FC<Id> = React.memo(({ id }) => {
   const [currentTodoData, setCurrentTodoData] = useState<Todo>();
-  const [newTodoStatus, setNewTodoStatus] = useState<TodoRequest>({
-    isDone: currentTodoData?.isDone,
-  });
   const [newTodoTitle, setNewTodoTitle] = useState<TodoRequest>({
     title: currentTodoData?.title,
   });
   const [editingStatus, setEditingStatus] = useState<boolean>(false);
+  // console.log("Компонент перерисовался");
 
-  useEffect!(() => {
-    const loadTodoItem = async () => {
-      try {
-        const response = await getData();
-        const todo = response.data.find((todo: Todo) => todo.id === id);
-        if (todo) {
-          setCurrentTodoData(todo);
-          setNewTodoStatus({
-            isDone: todo.isDone,
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка при загрузке данных:", error);
-      } finally {
-        window.dispatchEvent(new Event("visibilityChange"));
+  const loadTodoItem = useCallback(async () => {
+    try {
+      const todo = await getTodoById(id);
+
+      if (todo && (todo.title !== currentTodoData?.title || todo.isDone !== currentTodoData?.isDone)) {
+        setCurrentTodoData(todo);
+        setNewTodoTitle({ title: todo.title });
       }
-    };
-    loadTodoItem();
+    } catch (error) {
+      console.error("Ошибка при загрузке данных:", error);
+    } finally {
+      window.dispatchEvent(new Event("visibilityChange"));
+    }
+  }, [id, currentTodoData]);
 
-    window.addEventListener("todoItemUpdated", loadTodoItem); //!
+
+  useEffect(() => {
+    loadTodoItem();
+    window.addEventListener("todoItemUpdated", loadTodoItem);
     return () => {
       window.removeEventListener("todoItemUpdated", loadTodoItem);
     };
-  }, []);
+  }, [loadTodoItem]);
 
   const changingTodoTitle = async () => {
     try {
       setEditingStatus(false);
       setNewTodoTitle({ title: newTodoTitle.title?.trim() });
       await changeData(currentTodoData!.id, newTodoTitle);
-      window.dispatchEvent(new Event("todoListUpdated"));
+      // window.dispatchEvent(new Event("todoListUpdated"));
       window.dispatchEvent(new Event("todoCountUpdated"));
       window.dispatchEvent(new Event("todoItemUpdated"));
     } catch (error) {
@@ -68,12 +65,11 @@ const TodoItem: React.FC<Id> = ({ id }) => {
   };
 
   const changingTodoStatus = async () => {
-    setNewTodoStatus({
-      isDone: !newTodoStatus.isDone,
-    });
     try {
-      await changeData(currentTodoData!.id, newTodoStatus);
-      
+      await changeData(currentTodoData!.id, {
+        isDone: !currentTodoData?.isDone,
+      });
+
       window.dispatchEvent(new Event("todoListUpdated"));
       window.dispatchEvent(new Event("todoCountUpdated"));
       window.dispatchEvent(new Event("todoItemUpdated"));
@@ -101,11 +97,11 @@ const TodoItem: React.FC<Id> = ({ id }) => {
               }}
               onClick={() => {
                 changingTodoStatus();
-                window.dispatchEvent(new Event("todoListUpdated"));
                 // window.dispatchEvent(new Event("todoListUpdated"));
-                window.dispatchEvent(new Event("todoCountUpdated"));
+                // window.dispatchEvent(new Event("todoListUpdated"));
+                // window.dispatchEvent(new Event("todoCountUpdated"));
               }}
-              onMouseDown={changingTodoStatus}
+              // onMouseDown={changingTodoStatus}
             />
             {editingStatus ? (
               <>
@@ -211,6 +207,6 @@ const TodoItem: React.FC<Id> = ({ id }) => {
       )}
     </>
   );
-};
+});
 
 export default TodoItem;

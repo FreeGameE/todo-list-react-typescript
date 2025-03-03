@@ -5,7 +5,7 @@ import "./ChangeList.css";
 
 type SetFiltredTodoStatus = {
   setFilteredTodoStatus: (value: string) => void;
-  filteredTodoStatus: string;
+  filteredTodoStatus: any;
 };
 
 const ChangeList: React.FC<SetFiltredTodoStatus> = ({
@@ -22,8 +22,8 @@ const ChangeList: React.FC<SetFiltredTodoStatus> = ({
   useEffect(() => {
     const loadTodoList = async () => {
       try {
-        const response = await getData();
-        setTodosInfo(response.info);
+        const response = await getData(filteredTodoStatus);
+        setTodosInfo(response!.info);
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
       }

@@ -26,45 +26,57 @@ export interface MetaResponse<T, N> {
   };
 }
 
-export const getData = async () => {
-  let result;
+const api = axios.create({
+  baseURL: "https://easydev.club/api/v2",
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json; charset=UTF-8",
+  },
+});
+
+export const getData = async (status: "all" | "completed" | "inWork") => {
   try {
-    const response = await axios.get("https://easydev.club/api/v2/todos");
-    result = response.data;
+    const response = await api.get("/todos", {
+      params: { filter: status },
+    });
+    return response.data;
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
   }
-  return await result;
+};
+
+export const getTodoById = async (id: number) => {
+  try {
+    const response = await api.get(`/todos/${id}`);
+    return response.data;
+  } catch (error) {
+    // console.error("Ошибка при получении todo:", error);
+  }
 };
 
 export const updateData = async (updatedData?: TodoRequest) => {
   try {
-    await axios.post("https://easydev.club/api/v2/todos", updatedData, {
-      headers: { "Content-Type": "application/json; charset=UTF-8" },
-    });
+    await api.post("todos", updatedData);
 
     // window.dispatchEvent(new Event("changeListUpdated")); //!
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  getData();
+  getData("inWork");
 };
 
 export const changeData = async (id: number, changedData?: TodoRequest) => {
   try {
-    await axios.put(`https://easydev.club/api/v2/todos/${id}`, changedData, {
-      headers: { "Content-Type": "application/json; charset=UTF-8" },
-    });
+    await api.put(`/todos/${id}`, changedData);
   } catch (error) {
     console.error("Ошибка при отправке данных:", error);
   }
-  getData();
+  getData("inWork");
 };
 
 export const deleteData = async (id: number) => {
   try {
-    const response = await axios.delete(`https://easydev.club/api/v2/todos/${id}`, {
-    });
+    const response = await api.delete(`/todos/${id}`);
     window.dispatchEvent(new Event("todoCountUpdated"));
     window.dispatchEvent(new Event("todoListUpdated"));
     if (response.status !== 200) {
